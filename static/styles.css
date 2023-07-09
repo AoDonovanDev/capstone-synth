@@ -5,8 +5,14 @@
 body{
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100vh; 
 }
+
+/* form{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+} */
 
 kbd{
     opacity: 0.8;
@@ -46,4 +52,8 @@ kbd:active{
 .flex-end{
     display: flex;
     justify-content: end;
+}
+.navvy{
+    margin-left: 2%;
+    width: 90vw;
 }

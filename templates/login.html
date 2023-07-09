@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block body_class %}onboarding{% endblock %}
+
+{% block content %}
+
+    <div class="hero min-h-screen bg-base-200">
+        <div class="hero-content flex-col lg:flex-row-reverse">
+          <div class="text-center lg:text-left">
+            <h1 class="text-5xl font-bold">log in!</h1>
+            <p class="py-6">welcome back</p>
+          </div>
+          <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+            <div class="card-body">
+            <form action="/login" method="POST" id="user_form">
+                {{ form.hidden_tag() }}
+                {% for field in form if field.widget.input_type != 'hidden' %}
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">{{field.name}}</span>
+                </label>
+                {{ field(placeholder=field.label.text, class="form-control") }}
+                {% endfor %}
+              </div>
+              
+              <div class="form-control mt-6">
+                <button class="btn btn-primary">log in</button>
+              </div>
+            </div>
+          </div>
+          </form>
+        </div>
+      </div>
+  
+
+  
+
+{% endblock %}

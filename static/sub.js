@@ -12,6 +12,7 @@ class Sequencer{
             'major': [`C${this.o+1}`, `B${this.o}`, `A${this.o}`, `G${this.o}`, `F${this.o}`, `E${this.o}`, `D${this.o}`, `C${this.o}`],
             'minor': [`C${this.o+1}`, `A#${this.o}`, `G#${this.o}`, `G${this.o}`, `F${this.o}`, `D#${this.o}`, `D${this.o}`, `C${this.o}`]
         }
+        this.tuning = tuning;
         this.inst = new tonejs.Synth().toDestination();
         this.beats = beats
         this.stopped = false;
@@ -34,8 +35,16 @@ class Sequencer{
         }
         this.playSeq(seq, this.inst, .1)
         this.proj = {}
-        this.proj[this.inst] = seq;
-        console.log(this.proj)
+        this.proj.board = seq;
+        this.proj.inst = this.inst.name;
+        this.proj.o = this.o;
+        this.proj.tuning = this.tuning
+        currentProj[this.id] = this.proj;
+        console.log(currentProj)
+        console.log(JSON.stringify(currentProj))
+        document.getElementById('projData').value = JSON.stringify(currentProj);
+
+        console.log(currentProj)
     }
 
     pauseSeq(){
@@ -114,7 +123,7 @@ class Sequencer{
 
 
 class Board extends Sequencer{
-    constructor(beats, o=4, tuning='major'){
+    constructor(beats, o=4, tuning='major', id = Math.floor(Math.random()*10000)){
         super(beats, o, tuning);
         this.proj = {};
         this.board = document.createElement('div')
@@ -123,7 +132,7 @@ class Board extends Sequencer{
         this.board.style.borderRadius = '8px'
         this.board.style.gridTemplateColumns = `repeat(${beats}, 1fr)`
         this.board.classList.add('artboard', 'artboard-horizontal', 'phone-4')
-        this.id = Math.floor(Math.random()*10000);
+        this.id = id;
         this.seqClicker = this.seqClicker.bind(this)
         this.seqBuilder = this.seqBuilder.bind(this)
         this.playSeq = this.playSeq.bind(this)
@@ -185,8 +194,8 @@ class Board extends Sequencer{
 }
 
 let boardList = []
-let currentProj = []
-const a = new Board(16);
+let currentProj = {}
+const a = new Board(16, 3, 'minor', 42);
 boardList.push(a)
 
 const abtn = document.createElement('button')
