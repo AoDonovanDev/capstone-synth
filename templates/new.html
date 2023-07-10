@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero min-h-screen" style="background-image: url(../static/seqart1.jpg);">
+ 
+        <div class="hero-content text-center">
+          <div class="max-w-md">
+            <div class="card w-96 bg-base-100 shadow-xl">
+                <figure class="px-10 pt-10">
+    
+                </figure>
+                <div class="card-body items-center text-center">
+                  <h1 class="card-title">new project</h2>
+                   <form action="/new" method="post">
+                    <div class="form-control flex-start">
+                        {{ form.hidden_tag() }}
+                        {% for field in form if field.widget.input_type != 'hidden' %}
+                        <label for="{{field.name}}">{{field.name}}</label>
+                        {{ field(placeholder=field.label.text, class="form-control flexxy") }}
+                        {% endfor %}
+                    </div>
+                    <div class="card-actions flex-end">
+                        <button class="btn btn-primary">start</button>
+                      </div>
+                    </form>
+                </div>
+              </div>
+          </div>
+        </div>
+      
+</div>
+  
+{% endblock %}

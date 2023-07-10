@@ -5,7 +5,7 @@ from flask import Flask, render_template, redirect, session, flash, g, request
 from sqlalchemy.exc import IntegrityError
 from flask_debugtoolbar import DebugToolbarExtension
 from models import db, connect_db, User, Project
-from forms import UserAddForm, LoginForm
+from forms import UserAddForm, LoginForm, NewProjectForm
 from secret import secret
 
 CURR_USER_KEY = "curr_user"
@@ -44,7 +44,11 @@ def add_user_to_g():
 def home():
     if g.user:
         user = User.query.get(session['curr_user'])
-        return render_template('sequencer.html', user=user)
+        projects = user.projects
+        if not user.projects:
+            form = NewProjectForm()
+            return render_template('new.html', form=form)
+        return render_template('sequencer.html', user=user, projects=projects, selectedProject=projects[0])
     else:
         return render_template('splash.html')
 
@@ -128,8 +132,43 @@ def logout():
 @app.route('/save', methods=['post'])
 def save():
     """ save current project data """
-    proj_data = json.dumps(json.loads(request.values['projData']))
-    project = Project(proj_data = proj_data, user_id = g.user.id)
+    proj_data = json.loads(request.values['projData'])
+    name = proj_data['name']
+    proj_data = json.dumps(proj_data)
+    existing = Project.query.filter(Project.name == name).one_or_none()
+    if existing:
+            existing.proj_data = proj_data
+            db.session.add(existing)
+            db.session.commit()
+            return redirect(f'/projects/{existing.id}')
+    project = Project(proj_data = proj_data, user_id = g.user.id, name=name)
     db.session.add(project)
     db.session.commit()
-    return redirect('/')
+    return redirect(f'/projects/{project.id}')
+
+@app.route('/projects/<int:id>')
+def project(id):
+    project = Project.query.get(id)
+    if g.user:
+        user = User.query.get(session['curr_user'])
+        projects = user.projects
+        return render_template('sequencer.html', user=user, projects=projects, selectedProject=project)
+    else:
+        return render_template('splash.html')
+    
+@app.route('/new', methods=['get', 'post'])
+def new():
+    form = NewProjectForm()
+    if not g.user:
+        return render_template('splash.html')
+    user = User.query.get(session['curr_user'])
+    projects = user.projects
+    if form.validate_on_submit():
+        name = form.name.data
+        tuning = form.tuning.data
+        newProj = json.dumps({
+            'name': name,
+            'tuning': tuning
+        })
+        return render_template('sequencer.html',  newProj=newProj, user=user, projects=projects)
+    return render_template('new.html', form=form)

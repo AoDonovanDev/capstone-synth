@@ -108,14 +108,17 @@ class Project(db.Model):
         db.String(550),
         nullable=False,
     )
-
+    name = db.Column(
+        db.String(30),
+        nullable=False
+    )
     user_id = db.Column(
         db.Integer,
         db.ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
     )
     user = db.relationship("User")
-
+    
 
 
 def connect_db(app):

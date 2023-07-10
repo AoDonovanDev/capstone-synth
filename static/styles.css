@@ -52,8 +52,22 @@ kbd:active{
 .flex-end{
     display: flex;
     justify-content: end;
+} 
+.flex-start{
+    display: flex;
+    align-items: start;
+    margin-bottom: 4%;
+}
+.flexxy{
+    display: flex;
+    align-items: start;
+    margin-bottom: 4%;
 }
 .navvy{
     margin-left: 2%;
     width: 90vw;
+} 
+#seqBack{
+    background: no-repeat url('../static/seqart1.jpg');
+    
 }

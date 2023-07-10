@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, RadioField
 from wtforms.validators import DataRequired, Email, Length
 
 class UserAddForm(FlaskForm):
@@ -16,3 +16,8 @@ class LoginForm(FlaskForm):
 
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
+
+class NewProjectForm(FlaskForm):
+
+    tuning = RadioField('Tuning', validators=[(DataRequired())], choices=[('major', 'major'), ('minor', 'minor'), ('chromatic', 'chromatic')])
+    name = StringField('Name', validators=[DataRequired()])

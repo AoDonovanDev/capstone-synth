@@ -1,11 +1,15 @@
 import * as Tone from './tone/build/Tone.js'
 let tonejs = window.Tone;
 
-document.addEventListener('keydown', keyPlay)
+/* document.getElementById('projName').addEventListener('change', function(){
+    currentProj.name = this.value;
+    document.getElementById('projData').value = JSON.stringify(currentProj);
+}) */
+
 
 
 class Sequencer{
-    constructor(beats, o=4, tuning='major'){
+    constructor(beats, o=4, tuning='major', inst = new tonejs.Synth().toDestination()){
         this.o = o
         this.notes = {
             'chromatic': [`C${this.o+1}`, `B${this.o}`, `A#${this.o}`, `A${this.o}`, `G#${this.o}`, `G${this.o}`, `F#${this.o}`, `F${this.o}`, `E${this.o}`, `D#${this.o}`, `D${this.o}`, `C#${this.o}`, `C${this.o}`],
@@ -13,8 +17,8 @@ class Sequencer{
             'minor': [`C${this.o+1}`, `A#${this.o}`, `G#${this.o}`, `G${this.o}`, `F${this.o}`, `D#${this.o}`, `D${this.o}`, `C${this.o}`]
         }
         this.tuning = tuning;
-        this.inst = new tonejs.Synth().toDestination();
-        this.beats = beats
+        this.inst = inst;
+        this.beats = beats;
         this.stopped = false;
         this.nodeCount = beats * this.notes[tuning].length
         this.count = 0;
@@ -40,11 +44,7 @@ class Sequencer{
         this.proj.o = this.o;
         this.proj.tuning = this.tuning
         currentProj[this.id] = this.proj;
-        console.log(currentProj)
-        console.log(JSON.stringify(currentProj))
-        document.getElementById('projData').value = JSON.stringify(currentProj);
-
-        console.log(currentProj)
+        document.getElementById('projData').value = JSON.stringify(currentProj)
     }
 
     pauseSeq(){
@@ -69,7 +69,6 @@ class Sequencer{
     seqClicker(e){
         const target = e.target
         const beat = document.querySelectorAll(`.beat-${target.dataset.beat}.bid-${target.dataset.bid}`)
-        console.log(beat)
         for(let node of beat){
             if(node === target){
                 node.classList.toggle('active')
@@ -195,8 +194,71 @@ class Board extends Sequencer{
 
 let boardList = []
 let currentProj = {}
-const a = new Board(16, 3, 'minor', 42);
-boardList.push(a)
+let tuning = ''
+
+const selected = document.querySelector('#selectedProject')
+const newProj = document.querySelector('#newProj')
+function recallState(proj){
+    console.log(proj, proj.value)
+    let instDict = {
+        "Synth": new tonejs.Synth().toDestination(),
+        "AMSynth": new tonejs.AMSynth().toDestination(),
+        "DuoSynth": new tonejs.DuoSynth().toDestination()
+    }
+    let thisProject = JSON.parse(proj.value)
+    currentProj = thisProject
+    let bids = Object.keys(thisProject)
+    tuning = bids[0].tuning
+    for(let bid of bids){
+        if(bid != 'name'){
+        let bd = thisProject[bid]
+        console.log(bd)
+        let board = new Board(bd.board.length, bd.o, bd.tuning, bid)
+        console.log(bd.board)
+        board.inst = instDict[bd.inst]
+        boardList.push(board)
+        let count = 0;
+        for(let node of bd.board){
+            if(node){
+                let column = document.querySelectorAll(`.beat-${count}.bid-${bid}`)
+                console.log(column)
+                for(let note of column){
+                    if(note.dataset.note === node){
+                        if(note.dataset.beat % 4 === 0){
+                            note.classList.toggle('gray')
+                        }
+                        note.classList.add('active')
+                    }
+                }
+            }
+            count++
+        }
+    }
+    }
+}
+if(selected){
+    recallState(selected)
+}
+if(newProj){
+    let data = JSON.parse(newProj.value)
+    console.log(data)
+    boardList.push(new Board(16, 3, data.tuning))
+    tuning = data.tuning
+    currentProj.name = data.name
+}
+/* else{
+const projects = document.querySelectorAll('.projects')
+if(projects.length === 0){
+    const a = new Board(16, 3);
+    boardList.push(a)
+}
+else{
+    currentProj = JSON.parse(projects[0].value)
+    recallState(projects[0])
+}
+
+
+} */
 
 const abtn = document.createElement('button')
 const bbtn = document.createElement('button')
@@ -212,7 +274,6 @@ cntrls.append(abtn, bbtn, cbtn)
 document.getElementById('seqArea').prepend(cntrls)
 
 abtn.addEventListener('click', function(){
-    console.log(tonejs.context.state)
     for(let board of boardList){
         board.seqBuilder = board.seqBuilder.bind(board)
     }
@@ -238,7 +299,7 @@ bbtn.addEventListener('click', function(){
 
 cbtn.addEventListener('click', function(){
     for(let board of boardList){
-        board.pauseSeq = a.pauseSeq.bind(board)
+        board.pauseSeq = board.pauseSeq.bind(board)
         board.pauseSeq()
     }
 })
@@ -251,63 +312,19 @@ function placeAddBtn(){
     }
     const boards = document.querySelectorAll('.board')
     const last = boards[boards.length-1]
-    console.log(last)
     const addBtn = document.createElement('img')
     const addDiv = document.createElement('div')
     addBtn.addEventListener('click', function(){
-        boardList.push(new Board(16));
+        boardList.push(new Board(16, 3, tuning));
         placeAddBtn()
     })
     addDiv.classList.add('flex-end')
     addBtn.classList.add('w-24', 'rounded', 'avatar', 'btn-ghost')
     addBtn.id = 'addBtn'
-    addBtn.src = './static/add2.png'
+    addBtn.src = '../static/add2.png'
     addDiv.append(addBtn)
     last.append(addDiv)
 }
 
 
 
-
-
-const keys = document.querySelectorAll('.kbd')
-for(let key of keys){
-    key.addEventListener('click', clickPlay)
-}
-
-function clickPlay(){
-    if(tonejs.context.state != 'running'){
-        tonejs.start()
-    }
-    console.log(this)
-    const synth = new tonejs.PolySynth().toDestination();
-   
-    synth.triggerAttackRelease(`${this.id}4`, "8n");
-}   
-
-function keyPlay(e){
-    const keyDict = {
-        /* dictionary mapping keyboard keys to notes */
-        'a': 'C',
-        's': 'D',
-        'd': 'E',
-        'f': 'F',
-        'g': 'G',
-        'h': 'A',
-        'j': 'B',
-        'w': 'C#',
-        'e': 'D#',
-        't': 'F#',
-        'y': 'G#',
-        'u': 'A#'
-    }
-    if(e.key in keyDict){
-
-    if(tonejs.context.state != 'running'){
-        tonejs.start()
-    }
-    const synth = new tonejs.Synth().toDestination();
-    
-    synth.triggerAttackRelease(`${keyDict[e.key]}4`, "8n");
-    }
-}

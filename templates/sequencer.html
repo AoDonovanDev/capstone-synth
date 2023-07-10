@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
+
+
+
 <div class="navbar bg-base-100 navvy">
-    <div class="flex-1">
+      <div class="flex-1">
       <a class="btn btn-ghost normal-case text-xl">seqUin</a>
     </div>
     <div class="flex-none">
       <div class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+        <label tabindex="0" class="btn btn-ghost btn-circle">
           <div class="w-10 rounded-full">
-            <img src="../static/ava.png" />
+            <img src="../static/ava.png" class="w-24 avatar" />
           </div>
         </label>
         <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
@@ -21,29 +24,37 @@
             {% endif %}
             </a>
           </li>
+          <li><a href="/new">New</a></li>
           <li><a>Settings</a></li>
-          <li><a href="/logout">Logout</a></li>
-          <form action="/save" method="post">
+            <form  action="/save" method="post">
             <input type="hidden" name = 'projData' id="projData" value=null>
-          <li><button><a>Save</a></button></li>
-          </form>
+            <li><button class="button"><a>Save</a></button></li>
+            </form>
+           
+            <li><a href="/logout">Logout</a></li>
         </ul>
       </div>
     </div>
-  </div>
-
-
+</div>
+{% if selectedProject %}
+<input type="hidden" id="selectedProject" value="{{selectedProject.proj_data}}">
+{% endif %}
 <div class="dropdown dropdown-bottom navvy">
     <label tabindex="0" class="btn m-1">Projects</label>
     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-      <li><a>a project</a></li>
-      <li><a>another project</a></li>
+        {% for project in projects %}
+        <li><a class="projBtn" href="/projects/{{project.id}}">{{project.name}}
+        <input type="hidden" class="projects" value="{{project.proj_data}}">
+        </a>
+        </li>
+        {% endfor %}
     </ul>
 </div>
-
-
-
+{% if newProj %}
+<input type="hidden" id="newProj" value="{{newProj}}">
+{% endif %}
 <div id="seqArea">
 </div>
 <script src="../static/sub.js" type="module" ></script>
+
 {% endblock %}
