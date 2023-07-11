@@ -37,6 +37,7 @@ class Sequencer{
                 seq.push(cur)
             }
         }
+        tonejs.Transport.cancel()
         this.playSeq(seq, this.inst, .1)
         this.proj = {}
         this.proj.board = seq;
