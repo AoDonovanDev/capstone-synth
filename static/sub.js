@@ -24,6 +24,7 @@ class Sequencer{
         this.count = 0;
         this.noteInc = 0;
         this.layer = true;
+        this.seqHolder = null
     }
 
     seqBuilder(){
@@ -37,7 +38,7 @@ class Sequencer{
                 seq.push(cur)
             }
         }
-        tonejs.Transport.cancel()
+        
         this.playSeq(seq, this.inst, .1)
         this.proj = {}
         this.proj.board = seq;
@@ -95,10 +96,21 @@ class Sequencer{
         if(!this.layer){
             tonejs.Transport.cancel();
         }
+        
         const seq = new tonejs.Sequence((time, note) => {
         inst.triggerAttackRelease(note, leg, time);
         }, sequence).start(0);
         tonejs.Transport.start();
+        console.log(seq.events)
+        console.log(seq.loop, seq.loopStart, seq.loopEnd, seq.progress)
+        console.log(this.seqHolder)
+        if(this.seqHolder){
+            this.seqHolder.dispose()
+            this.seqHolder = seq
+        }
+        else{
+            this.seqHolder = seq
+        }
     }
 
     setSynth(){
