@@ -92,6 +92,7 @@ class Sequencer{
     }
 
     playSeq(sequence, inst, leg){
+        console.log(tonejs.context.state)
         this.stopped = false;
         if(!this.layer){
             tonejs.Transport.cancel();
@@ -101,16 +102,12 @@ class Sequencer{
         inst.triggerAttackRelease(note, leg, time);
         }, sequence).start(0);
         tonejs.Transport.start();
-        console.log(seq.events)
-        console.log(seq.loop, seq.loopStart, seq.loopEnd, seq.progress)
         console.log(this.seqHolder)
         if(this.seqHolder){
             this.seqHolder.dispose()
-            this.seqHolder = seq
         }
-        else{
-            this.seqHolder = seq
-        }
+        this.seqHolder = seq
+        console.log(seq, this.inst)
     }
 
     setSynth(){
@@ -212,7 +209,6 @@ let tuning = ''
 const selected = document.querySelector('#selectedProject')
 const newProj = document.querySelector('#newProj')
 function recallState(proj){
-    console.log(proj, proj.value)
     let instDict = {
         "Synth": new tonejs.Synth().toDestination(),
         "AMSynth": new tonejs.AMSynth().toDestination(),
@@ -221,20 +217,18 @@ function recallState(proj){
     let thisProject = JSON.parse(proj.value)
     currentProj = thisProject
     let bids = Object.keys(thisProject)
-    tuning = bids[0].tuning
+    tuning = currentProj[bids[0]].tuning
+   
     for(let bid of bids){
         if(bid != 'name'){
         let bd = thisProject[bid]
-        console.log(bd)
         let board = new Board(bd.board.length, bd.o, bd.tuning, bid)
-        console.log(bd.board)
         board.inst = instDict[bd.inst]
         boardList.push(board)
         let count = 0;
         for(let node of bd.board){
             if(node){
                 let column = document.querySelectorAll(`.beat-${count}.bid-${bid}`)
-                console.log(column)
                 for(let note of column){
                     if(note.dataset.note === node){
                         if(note.dataset.beat % 4 === 0){
@@ -254,7 +248,6 @@ if(selected){
 }
 if(newProj){
     let data = JSON.parse(newProj.value)
-    console.log(data)
     boardList.push(new Board(16, 3, data.tuning))
     tuning = data.tuning
     currentProj.name = data.name
@@ -289,10 +282,14 @@ document.getElementById('seqArea').prepend(cntrls)
 abtn.addEventListener('click', function(){
     for(let board of boardList){
         board.seqBuilder = board.seqBuilder.bind(board)
+        board.playSeq = board.playSeq.bind(board)
+        board.setSynth = board.setSynth.bind(board)
     }
     if(tonejs.context.state != 'running'){
         tonejs.start()
+        console.log(tonejs.context.state)
         for(let board of boardList){
+            board.setSynth()
             board.seqBuilder()
         }
     }
