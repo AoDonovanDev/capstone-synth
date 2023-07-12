@@ -1,13 +1,6 @@
 import * as Tone from './tone/build/Tone.js'
 let tonejs = window.Tone;
 
-/* document.getElementById('projName').addEventListener('change', function(){
-    currentProj.name = this.value;
-    document.getElementById('projData').value = JSON.stringify(currentProj);
-}) */
-
-
-
 class Sequencer{
     constructor(beats, o=4, tuning='major', inst = new tonejs.Synth().toDestination()){
         this.o = o
@@ -271,7 +264,7 @@ const bbtn = document.createElement('button')
 const cbtn = document.createElement('button')
 const cntrls = document.createElement('div')
 abtn.textContent = 'start'
-bbtn.textContent = 'stop'
+bbtn.textContent = 'stop/clear'
 cbtn.textContent = 'pause'
 abtn.classList.add('btn', 'btn-success')
 bbtn.classList.add('btn', 'btn-error')
