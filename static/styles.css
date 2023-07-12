@@ -71,3 +71,6 @@ kbd:active{
     background: no-repeat url('../static/seqart1.jpg');
     
 }
+.gold{
+    border: 3px solid goldenrod;
+}

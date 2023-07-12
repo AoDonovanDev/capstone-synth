@@ -101,8 +101,9 @@ class Sequencer{
         }
         this.seqHolder = seq
         console.log(seq, this.inst)
+        console.log(seq.playbackRate)
+        
     }
-
     setSynth(){
         this.inst.dispose()
         this.inst = new tonejs.Synth().toDestination();
@@ -328,6 +329,22 @@ function placeAddBtn(){
     addDiv.append(addBtn)
     last.append(addDiv)
 }
+let count = 0
+tonejs.Transport.scheduleRepeat(() => {
+	// use the callback time to schedule events
+    console.log(count)
+    const all = document.querySelectorAll('.seqNode');
+    for(let node of all){
+        node.classList.remove('gold')
+    }
+    const column = document.querySelectorAll(`.beat-${count}`);
+    for(let cell of column){
+        cell.classList.add('gold');
+    }
 
 
-
+    count ++
+    if(count>15){
+        count=0
+    }
+}, "8n");

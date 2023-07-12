@@ -2515,6 +2515,10 @@ kbd:active{
   background: no-repeat url('../static/seqart1.jpg');
 }
 
+.gold{
+  border: 3px solid goldenrod;
+}
+
 @media (min-width: 1024px) {
   .lg\:flex-row-reverse {
     flex-direction: row-reverse;
