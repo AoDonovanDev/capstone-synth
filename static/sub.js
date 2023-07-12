@@ -289,6 +289,15 @@ abtn.addEventListener('click', function(){
     }
     else if(tonejs.context.state === 'running'){
         for(let board of boardList){
+            if(board.inst.name === 'Synth'){
+                board.setSynth()
+            }
+            if(board.inst.name === 'DuoSynth'){
+                board.setDuoSynth()
+            }
+            if(board.AMSynth === 'AMSynth'){
+                board.setAMSynth()
+            }
             board.seqBuilder()
         }
     }
@@ -330,9 +339,9 @@ function placeAddBtn(){
     last.append(addDiv)
 }
 let count = 0
+
 tonejs.Transport.scheduleRepeat(() => {
 	// use the callback time to schedule events
-    console.log(count)
     const all = document.querySelectorAll('.seqNode');
     for(let node of all){
         node.classList.remove('gold')
