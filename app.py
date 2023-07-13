@@ -48,7 +48,7 @@ def home():
         if not user.projects:
             form = NewProjectForm()
             return render_template('new.html', form=form)
-        return render_template('sequencer.html', user=user, projects=projects, selectedProject=projects[0])
+        return render_template('sequencerv2.html', user=user, projects=projects, selectedProject=projects[0])
     else:
         return render_template('splash.html')
 
@@ -152,7 +152,7 @@ def project(id):
     if g.user:
         user = User.query.get(session['curr_user'])
         projects = user.projects
-        return render_template('sequencer.html', user=user, projects=projects, selectedProject=project)
+        return render_template('sequencerv2.html', user=user, projects=projects, selectedProject=project)
     else:
         return render_template('splash.html')
     
@@ -170,5 +170,5 @@ def new():
             'name': name,
             'tuning': tuning
         })
-        return render_template('sequencer.html',  newProj=newProj, user=user, projects=projects)
+        return render_template('sequencerv2.html',  newProj=newProj, user=user, projects=projects)
     return render_template('new.html', form=form)

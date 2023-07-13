@@ -49,6 +49,7 @@ class Sequencer{
     stopClear(){
         tonejs.Transport.stop()
         tonejs.Transport.cancel()
+        count=0;
         this.stopped = true
         this.proj = {};
         const activeNodes = document.querySelectorAll(`.active.bid-${this.id}`)
@@ -58,6 +59,26 @@ class Sequencer{
                 node.classList.add('gray')
             }
         }
+
+        tonejs.Transport.scheduleRepeat(() => {
+            
+            // use the callback time to schedule events
+            const all = document.querySelectorAll('.seqNode');
+            for(let node of all){
+                node.classList.remove('gold')
+            }
+            const column = document.querySelectorAll(`.beat-${count}`);
+            for(let cell of column){
+                cell.classList.add('gold');
+            }
+        
+            console.log(count)
+            count ++
+            if(count>15){
+                count=0
+            }
+        }, "8n");
+
 
     }
 
@@ -264,6 +285,7 @@ const abtn = document.createElement('button')
 const bbtn = document.createElement('button')
 const cbtn = document.createElement('button')
 const cntrls = document.createElement('div')
+cntrls.classList.add('cntrls')
 abtn.textContent = 'start'
 bbtn.textContent = 'stop/clear'
 cbtn.textContent = 'pause'

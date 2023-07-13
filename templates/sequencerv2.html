@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="navbar bg-base-100 navvy">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <label tabindex="0" class="btn btn-ghost">
+        <a class="normal-case text-xl">sequin</a>
+      </label>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box">
+        {% for project in projects %}
+        <li><a class="projBtn" href="/projects/{{project.id}}">{{project.name}}
+        <input type="hidden" class="projects" value="{{project.proj_data}}">
+        </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="navbar-center">
+    <a class="btn btn-ghost normal-case text-xl">save</a>
+    <form  action="/save" method="post">
+      <input type="hidden" name = 'projData' id="projData" value=null>
+      <a class="btn btn-ghost normal-case text-xl" href="/new">new</a>
+      </form>
+  </div>
+  <div class="navbar-end">
+    <div class="dropdown dropdown-end">
+      <label tabindex="0" class="btn btn-ghost btn-circle">
+        <div class="w-10 rounded-full">
+          <img src="../static/ava.png" class="w-24 avatar" />
+        </div>
+      </label>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+          <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% if selectedProject %}
+<input type="hidden" id="selectedProject" value="{{selectedProject.proj_data}}">
+{% endif %}
+
+{% if newProj %}
+<input type="hidden" id="newProj" value="{{newProj}}">
+{% endif %}
+
+<div id="seqArea">
+</div>
+<script src="../static/sub.js" type="module" ></script>
+
+{% endblock %}

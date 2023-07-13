@@ -65,7 +65,8 @@ kbd:active{
 }
 .navvy{
     margin-left: 2%;
-    width: 90vw;
+    width: 95vw;
+    margin-bottom: 5%;
 } 
 #seqBack{
     background: no-repeat url('../static/seqart1.jpg');
@@ -73,4 +74,12 @@ kbd:active{
 }
 .gold{
     border: 3px solid goldenrod;
+}
+.login{
+    min-width: 90%;
+}
+.cntrls{
+    display: flex;
+    width: 50vw;
+    justify-content: space-around;
 }
