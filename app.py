@@ -13,7 +13,7 @@ CURR_USER_KEY = "curr_user"
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
-    os.environ.get('DATABASE_URL', f'postgresql://postgres:{secret}@localhost/sequencer'))
+    os.environ.get('DATABASE_URL', secret))
 connect_db(app)
 app.app_context().push()
 
