@@ -5,9 +5,9 @@ class Sequencer{
     constructor(beats, o=4, tuning='major', inst = new tonejs.Synth().toDestination()){
         this.o = o
         this.notes = {
-            'chromatic': [`C${this.o+1}`, `B${this.o}`, `A#${this.o}`, `A${this.o}`, `G#${this.o}`, `G${this.o}`, `F#${this.o}`, `F${this.o}`, `E${this.o}`, `D#${this.o}`, `D${this.o}`, `C#${this.o}`, `C${this.o}`],
-            'major': [`C${this.o+1}`, `B${this.o}`, `A${this.o}`, `G${this.o}`, `F${this.o}`, `E${this.o}`, `D${this.o}`, `C${this.o}`],
-            'minor': [`C${this.o+1}`, `A#${this.o}`, `G#${this.o}`, `G${this.o}`, `F${this.o}`, `D#${this.o}`, `D${this.o}`, `C${this.o}`]
+            'chromatic': [`C`, `B`, `A#`, `A`, `G#`, `G`, `F#`, `F`, `E`, `D#`, `D`, `C#`, `C`],
+            'major': [`C`, `B`, `A`, `G`, `F`, `E`, `D`, `C`],
+            'minor': [`C`, `A#`, `G#`, `G`, `F`, `D#`, `D`, `C`]
         }
         this.tuning = tuning;
         this.inst = inst;
@@ -22,10 +22,16 @@ class Sequencer{
 
     seqBuilder(){
         let seq = []
+        let octave = parseInt(this.o)
         for(let i = 0; i <this.beats; i++){
             let cur = document.querySelector(`.beat-${i}.active.bid-${this.id}`)
             if(cur != null){
-                seq.push(cur.dataset.note)
+                if(cur.classList.contains('high')){
+                    seq.push(cur.dataset.note+(octave+1))
+                }
+                else{
+                    seq.push(cur.dataset.note+octave)
+                }
             }
             else{
                 seq.push(cur)
@@ -39,6 +45,7 @@ class Sequencer{
         this.proj.o = this.o;
         this.proj.tuning = this.tuning
         currentProj[this.id] = this.proj;
+        console.log(seq)
         document.getElementById('projData').value = JSON.stringify(currentProj)
     }
 
@@ -162,6 +169,11 @@ class Sequencer{
         this.seqBuilder();
     }
 
+    octaveSetter(e){
+        this.o = e.target.value
+        this.seqBuilder()
+    }
+
     press(btn){
         btn.classList.add('pressbtn')
         btn.classList.toggle('bxsh')
@@ -197,6 +209,7 @@ class Board extends Sequencer{
         this.setSynth = this.setSynth.bind(this)
         this.setAMSynth = this.setAMSynth.bind(this)
         this.setDuoSynth = this.setDuoSynth.bind(this)
+        this.octaveSetter = this.octaveSetter.bind(this)
 
 
 
@@ -205,12 +218,45 @@ class Board extends Sequencer{
             /* create and render board */
             const node = document.createElement('div')
             node.classList.add('seqNode', `bid-${this.id}`)
+            if(i<16){
+                node.classList.add('high')
+            }
             this.board.append(node)
         }
-          
+        
+
+        this.sldbx = document.createElement('div')
+        this.sldbx.classList.add('octaveSlider')
+        this.slider = document.createElement('input')
+        this.slider.setAttribute('type', 'range')
+        this.slider.setAttribute('min', '1')
+        this.slider.setAttribute('max', '6')
+        this.slider.setAttribute('value', '3')
+        this.slider.setAttribute('step', '1')
+        this.slider.classList.add('range')
+        this.tick1 = document.createElement('span')
+        this.tick1.textContent = '|'
+        this.tickbx = document.createElement('div')
+        this.tickbx.classList.add('flex', 'justify-between', 'text-xs', 'px-2')
+        this.tick2 = this.tick1.cloneNode(true)
+        this.tick3 = this.tick1.cloneNode(true)
+        this.tick4 = this.tick1.cloneNode(true)
+        this.tick5 = this.tick1.cloneNode(true)
+        this.tickbx.append(this.tick1, this.tick2, this.tick4, this.tick4, this.tick5)
+        this.sldbx.append(this.slider, this.tickbx)
+
+
+        this.brdbtm = document.createElement('div')
+        this.brdbtm.classList.add('brdbtm')
+        this.brdbtm.append(this.board, this.sldbx)
+
+
+
         this.instbrd = document.createElement('div')
         this.instbrd.classList.add('board')
-        this.instbrd.append(this.board)
+        this.instbrd.append(this.brdbtm)
+
+
         document.getElementById('seqArea').append(this.instbrd)
 
         this.nodes = document.querySelectorAll(`.seqNode.bid-${this.id}`)
@@ -252,6 +298,9 @@ class Board extends Sequencer{
         this.synthBtn.addEventListener('click', this.setSynth)
         this.AMSynthBtn.addEventListener('click', this.setAMSynth)
         this.duoSynthBtn.addEventListener('click', this.setDuoSynth)
+        this.slider.addEventListener('change', this.octaveSetter)
+
+
     }
 }
 
@@ -279,16 +328,30 @@ function recallState(proj){
         board.inst = instDict[bd.inst]
         boardList.push(board)
         let count = 0;
+        console.log(bd.board)
         for(let node of bd.board){
             if(node){
                 let column = document.querySelectorAll(`.beat-${count}.bid-${bid}`)
                 for(let note of column){
-                    if(note.dataset.note === node){
+                    if(note.classList.contains('high')){
+                        let octave = parseInt(bd.o)
+                        if(note.dataset.note+(octave+1) === node){
+                            console.log(note.dataset.note+bd.o, node)
+                            if(note.dataset.beat % 4 === 0){
+                                note.classList.toggle('gray')
+                            }
+                            note.classList.add('active')
+                        }
+                    }
+                    else{
+                        if(note.dataset.note+bd.o === node){
+                        console.log(note.dataset.note+bd.o, node)
                         if(note.dataset.beat % 4 === 0){
                             note.classList.toggle('gray')
                         }
                         note.classList.add('active')
                     }
+                }
                 }
             }
             count++
