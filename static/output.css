@@ -2617,7 +2617,7 @@ kbd:active{
 }
 
 .active{
-  background-color: red;
+  background-color: hsl(var(--er));
 }
 
 .gray{

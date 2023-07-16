@@ -149,8 +149,6 @@ class Sequencer{
             this.press(e.target)
             console.log(e.target)
         }
-        this.pop()
-        this.press(e.target)
         this.inst.dispose()
         this.inst = new tonejs.AMSynth().toDestination();
         this.seqBuilder();
@@ -162,8 +160,6 @@ class Sequencer{
             this.press(e.target)
             console.log(e.target)
         }
-        this.pop()
-        this.press(e.target)
         this.inst.dispose()
         this.inst = new tonejs.DuoSynth().toDestination();
         this.seqBuilder();
@@ -231,7 +227,7 @@ class Board extends Sequencer{
         this.slider.setAttribute('type', 'range')
         this.slider.setAttribute('min', '1')
         this.slider.setAttribute('max', '6')
-        this.slider.setAttribute('value', '3')
+        this.slider.setAttribute('value', `${this.o}`)
         this.slider.setAttribute('step', '1')
         this.slider.classList.add('range')
         this.tick1 = document.createElement('span')

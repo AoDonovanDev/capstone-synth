@@ -34,7 +34,7 @@ kbd:active{
     border: 1px solid black;
 }
 .active{
-    background-color: red;
+    background-color: hsl(var(--er));
 }
 .gray{
     background-color: gainsboro;
