@@ -2446,6 +2446,10 @@ kbd:active{
 .board{
   margin-top: 2%;
   margin-bottom: 3%;
+  padding: 2%;
+  background-color: hsl(var(--b2));
+  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
+  border-radius: 6%;
 }
 
 .flex-end{
@@ -2485,15 +2489,31 @@ kbd:active{
 
 .cntrls{
   display: flex;
-  width: 50vw;
+  width: 60vw;
   justify-content: space-around;
 }
 
-@media (min-width: 1024px) {
-  .lg\:flex-row-reverse {
-    flex-direction: row-reverse;
-  }
+.instcntrls{
+  display: flex;
+  width: 100%;
+  margin-bottom: 2%;
+}
 
+.instbtn{
+  margin-right: 2%;
+}
+
+.btnpress{
+  top: 2px;
+  left: 1px;
+  box-shadow: none;
+}
+
+.bxsh{
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+@media (min-width: 1024px) {
   .lg\:text-left {
     text-align: left;
   }

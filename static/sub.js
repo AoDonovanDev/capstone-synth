@@ -125,22 +125,55 @@ class Sequencer{
         console.log(seq.playbackRate)
         
     }
-    setSynth(){
+    setSynth(e){
+        if(!e.target.classList.contains('mstr')){
+            this.pop()
+            this.press(e.target)
+            console.log(e.target)
+        }
         this.inst.dispose()
         this.inst = new tonejs.Synth().toDestination();
         this.seqBuilder();
     }
 
-    setAMSynth(){
+    setAMSynth(e){
+        if(!e.target.classList.contains('mstr')){
+            this.pop()
+            this.press(e.target)
+            console.log(e.target)
+        }
+        this.pop()
+        this.press(e.target)
         this.inst.dispose()
         this.inst = new tonejs.AMSynth().toDestination();
         this.seqBuilder();
     }
 
-    setDuoSynth(){
+    setDuoSynth(e){
+        if(!e.target.classList.contains('mstr')){
+            this.pop()
+            this.press(e.target)
+            console.log(e.target)
+        }
+        this.pop()
+        this.press(e.target)
         this.inst.dispose()
         this.inst = new tonejs.DuoSynth().toDestination();
         this.seqBuilder();
+    }
+
+    press(btn){
+        btn.classList.add('pressbtn')
+        btn.classList.toggle('bxsh')
+    }
+
+    pop(){
+        const instbtns = document.querySelectorAll(`.instbtn.bid-${this.id}`)
+        for(let btn of instbtns){
+            btn.classList.remove('pressbtn')
+            btn.classList.remove('bxsh')
+            btn.classList.add('bxsh')
+        }
     }
 }
 
@@ -164,6 +197,7 @@ class Board extends Sequencer{
         this.setSynth = this.setSynth.bind(this)
         this.setAMSynth = this.setAMSynth.bind(this)
         this.setDuoSynth = this.setDuoSynth.bind(this)
+
 
 
 
@@ -199,17 +233,21 @@ class Board extends Sequencer{
 
         this.synthBtn = document.createElement('button')
         this.synthBtn.textContent = 'synth'
-        this.synthBtn.classList.add('btn', 'btn-neutral')
+        this.synthBtn.classList.add('btn', 'btn-neutral', 'instbtn', 'bxsh')
 
         this.AMSynthBtn = document.createElement('button')
         this.AMSynthBtn.textContent = 'AMsynth'
-        this.AMSynthBtn.classList.add('btn', 'btn-accent')
+        this.AMSynthBtn.classList.add('btn', 'btn-accent', 'instbtn', 'bxsh')
 
         this.duoSynthBtn = document.createElement('button')
         this.duoSynthBtn.textContent = 'duo synth'
-        this.duoSynthBtn.classList.add('btn', 'btn-primary')
+        this.duoSynthBtn.classList.add('btn', 'btn-primary', 'instbtn', 'bxsh')
 
-        this.instbrd.prepend(this.synthBtn, this.AMSynthBtn, this.duoSynthBtn)
+        this.instcntrls = document.createElement('div')
+        this.instcntrls.classList.add('instcntrls')
+        this.instcntrls.append(this.synthBtn, this.AMSynthBtn, this.duoSynthBtn)
+
+        this.instbrd.prepend(this.instcntrls)
 
         this.synthBtn.addEventListener('click', this.setSynth)
         this.AMSynthBtn.addEventListener('click', this.setAMSynth)
@@ -289,13 +327,13 @@ cntrls.classList.add('cntrls')
 abtn.textContent = 'start'
 bbtn.textContent = 'stop/clear'
 cbtn.textContent = 'pause'
-abtn.classList.add('btn', 'btn-success')
-bbtn.classList.add('btn', 'btn-error')
-cbtn.classList.add('btn', 'btn-warning')
+abtn.classList.add('btn', 'btn-success', 'bxsh', 'mstr')
+bbtn.classList.add('btn', 'btn-error', 'bxsh', 'mstr')
+cbtn.classList.add('btn', 'btn-warning', 'bxsh', 'mstr')
 cntrls.append(abtn, bbtn, cbtn)
 document.getElementById('seqArea').prepend(cntrls)
 
-abtn.addEventListener('click', function(){
+abtn.addEventListener('click', function(e){
     for(let board of boardList){
         board.seqBuilder = board.seqBuilder.bind(board)
         board.playSeq = board.playSeq.bind(board)
@@ -305,20 +343,20 @@ abtn.addEventListener('click', function(){
         tonejs.start()
         console.log(tonejs.context.state)
         for(let board of boardList){
-            board.setSynth()
+            board.setSynth(e)
             board.seqBuilder()
         }
     }
     else if(tonejs.context.state === 'running'){
         for(let board of boardList){
             if(board.inst.name === 'Synth'){
-                board.setSynth()
+                board.setSynth(e)
             }
             if(board.inst.name === 'DuoSynth'){
-                board.setDuoSynth()
+                board.setDuoSynth(e)
             }
             if(board.AMSynth === 'AMSynth'){
-                board.setAMSynth()
+                board.setAMSynth(e)
             }
             board.seqBuilder()
         }
@@ -358,7 +396,7 @@ function placeAddBtn(){
     addBtn.id = 'addBtn'
     addBtn.src = '../static/add2.png'
     addDiv.append(addBtn)
-    last.append(addDiv)
+    last.after(addDiv)
 }
 let count = 0
 

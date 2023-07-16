@@ -1,1 +1,1 @@
-secret = '!1IcedCoffee'
+secret = 'postgresql://postgres:!1IcedCoffee@localhost/sequencer'
