@@ -12,7 +12,12 @@ for this project I am using tone.js api to implement a sequencer that can be pla
   with the data.
 
 at this time, there are three instruments that can be selected or switched out mid sequence for each board.  the user can add as many board instances
-  as they would like for each project, and each board instance also has an octave slider. the octave slider can be used to set the octave.
+  as they would like for each project, and each board instance also has an octave slider. the octave slider can be used to set the octave. projects can be saved 
+  and accessed through the sequin dropdown.
+  I felt these features (unlimited boards, 3 instruments, an octave switcher, project persistence) were the most important for a fun 'musical toy' like experience.
+  There will be more features added, but these are the essentials. 
+
+Server side is python / flask / gunicorn.  The database for storing projects is postgres and managed with the sqlalchemy orm.  
 
 the Sequencer class contains all the playback and sequence building functions as well as instrument setting functionality. The Board class extends this
 and contains the dom elements representing each board.  
