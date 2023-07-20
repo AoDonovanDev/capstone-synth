@@ -11,6 +11,7 @@ from secret import secret
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
+print('server start')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
     os.environ.get('DATABASE_URL', secret))
@@ -77,10 +78,11 @@ def signup():
     If the there already is a user with that username: flash message
     and re-present form.
     """
-
+    print('signup')
     form = UserAddForm()
 
     if form.validate_on_submit():
+        print('try signup')
         try:
             user = User.signup(
                 username=form.username.data,
@@ -90,7 +92,8 @@ def signup():
             )
             db.session.commit()
 
-        except IntegrityError:
+        except:
+            print('exception')
             flash("Username already taken", 'danger')
             return render_template('signup.html', form=form)
 
@@ -104,6 +107,7 @@ def signup():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """Handle user login."""
+    print(1)
 
     form = LoginForm()
 
