@@ -58,6 +58,7 @@ def do_login(user):
     """Log in user."""
 
     session[CURR_USER_KEY] = user.id
+    print('logged in')
 
 
 def do_logout():
@@ -65,6 +66,7 @@ def do_logout():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
+    print('logged out')
 
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -82,7 +84,7 @@ def signup():
     form = UserAddForm()
 
     if form.validate_on_submit():
-        print('try signup')
+        print('form valid')
         try:
             user = User.signup(
                 username=form.username.data,
@@ -91,6 +93,7 @@ def signup():
                 image_url=form.image_url.data or User.image_url.default.arg,
             )
             db.session.commit()
+            print('user created')
 
         except:
             print('exception')
@@ -114,6 +117,7 @@ def login():
     if form.validate_on_submit():
         user = User.authenticate(form.username.data,
                                  form.password.data)
+        print('form valid')
 
         if user:
             do_login(user)

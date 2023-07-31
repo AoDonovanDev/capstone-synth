@@ -117,7 +117,7 @@ class Project(db.Model):
         db.ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
     )
-    user = db.relationship("User")
+    user = db.relationship("User", overlaps="projects")
     
 
 
