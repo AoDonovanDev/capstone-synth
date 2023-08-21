@@ -105,7 +105,7 @@ class Project(db.Model):
     )
 
     proj_data = db.Column(
-        db.String(550),
+        db.String(10000),
         nullable=False,
     )
     name = db.Column(
