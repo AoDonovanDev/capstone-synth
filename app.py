@@ -114,7 +114,6 @@ def login():
     print('login')
 
     form = LoginForm()
-    print(form.csrf_token)
     if form.validate_on_submit():
         try:
             user = User.authenticate(form.username.data, form.password.data)
@@ -127,6 +126,10 @@ def login():
             print(e, 'User model could not authenticate')
     flash("Invalid credentials.", 'danger')
     print('form not valid')
+    print('form data:', form.data)
+    print('form errors:', form.errors)
+    print('form meta', form.meta)
+    print('csrf token:', form.csrf_token)
     return render_template('login.html', form=form)
 
 
