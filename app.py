@@ -119,15 +119,14 @@ def login():
         try:
             user = User.authenticate(form.username.data, form.password.data)
             print('form valid')
+            if user:
+                do_login(user)
+                flash(f"Hello, {user.username}!", "success")
+                return redirect("/")
         except:
             ('User model could not authenticate')
-        if user:
-            do_login(user)
-            flash(f"Hello, {user.username}!", "success")
-            return redirect("/")
-
-        flash("Invalid credentials.", 'danger')
-
+    flash("Invalid credentials.", 'danger')
+    print('form not valid')
     return render_template('login.html', form=form)
 
 
