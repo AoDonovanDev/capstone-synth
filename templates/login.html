@@ -12,7 +12,7 @@
           </div>
           <div class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
             <div class="card-body">
-              {% with messages in get_flashed_messages() %}
+              {% with messages = get_flashed_messages() %}
               {% if messages %}
               {% for message in messages %}
               <p>{{message}}</p>
