@@ -51,6 +51,7 @@ def home():
             return render_template('new.html', form=form)
         return render_template('sequencerv2.html', user=user, projects=projects, selectedProject=projects[0])
     else:
+        print('splash')
         return render_template('splash.html')
 
 
@@ -110,15 +111,16 @@ def signup():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """Handle user login."""
-    print(1)
+    print('login')
 
     form = LoginForm()
-
+    print(form)
     if form.validate_on_submit():
-        user = User.authenticate(form.username.data,
-                                 form.password.data)
-        print('form valid')
-
+        try:
+            user = User.authenticate(form.username.data, form.password.data)
+            print('form valid')
+        except:
+            ('User model could not authenticate')
         if user:
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
