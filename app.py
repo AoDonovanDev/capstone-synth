@@ -8,14 +8,14 @@ from models import db, connect_db, User, Project
 from forms import UserAddForm, LoginForm, NewProjectForm
 from secret import secret
 
-from flask_wtf.csrf import CSRFProtect
+
 
 
 
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
-csrf = CSRFProtect()
+
 
 
 print('server start')
@@ -76,7 +76,6 @@ def do_logout():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
-    print('logged out')
 
 
 @app.route('/signup', methods=["GET", "POST"])
@@ -91,12 +90,9 @@ def signup():
     If the there already is a user with that username: flash message
     and re-present form.
     """
-    print('signup')
-    print('csrf wtf header', app.config["WTF_CSRF_HEADERS"])
     form = UserAddForm()
 
     if form.validate_on_submit():
-        print('form valid')
         try:
             user = User.signup(
                 username=form.username.data,
@@ -129,10 +125,6 @@ def login():
     if form.validate_on_submit():
         try:
             user = User.authenticate(form.username.data, form.password.data)
-            print('form valid')
-            """ if 'csrf_token' in session:
-                print('form csrf:', form.data['csrf_token'])
-                print('session csrf:', session['csrf_token']) """
             if user:
                 do_login(user)
                 flash(f"Hello, {user.username}!", "success")
@@ -140,12 +132,6 @@ def login():
         except Exception as e:
             print(e, 'User model could not authenticate')
     flash("Invalid credentials.", 'danger')
-    print('form not valid')
-    print('form data:', form.data)
-    print('form errors:', form.errors)
-    """ if 'csrf_token' in session:
-        print('form csrf:', form.data['csrf_token'])
-        print('session csrf:', session['csrf_token']) """
     return render_template('login.html', form=form)
 
 
