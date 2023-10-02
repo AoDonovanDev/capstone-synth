@@ -79,7 +79,6 @@ def do_logout():
 
 
 @app.route('/signup', methods=["GET", "POST"])
-@csrf.exempt
 def signup():
     """Handle user signup.
 
@@ -116,7 +115,6 @@ def signup():
         return render_template('signup.html', form=form)
     
 @app.route('/login', methods=["GET", "POST"])
-@csrf.exempt
 def login():
     """Handle user login."""
     print('login')
