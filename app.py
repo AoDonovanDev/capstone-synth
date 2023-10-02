@@ -15,8 +15,8 @@ from flask_wtf.csrf import CSRFProtect
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
-csrf = CSRFProtect(app)
-csrf.init_app(app)
+csrf = CSRFProtect()
+
 
 print('server start')
 
@@ -28,7 +28,7 @@ app.app_context().push()
 app.config["SECRET_KEY"] = "abc123"
 app.config["SESSION_COOKIE_SECURE"] = False
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-app.config["WTF_CSRF_CHECK_DEFAULT"] = False
+
 
 
 toolbar = DebugToolbarExtension(app)
