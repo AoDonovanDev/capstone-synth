@@ -118,6 +118,8 @@ def login():
         try:
             user = User.authenticate(form.username.data, form.password.data)
             print('form valid')
+            print('form csrf:', form.data.csrf_token)
+            print('session csrf:', session['csrf_token'])
             if user:
                 do_login(user)
                 flash(f"Hello, {user.username}!", "success")
@@ -128,8 +130,8 @@ def login():
     print('form not valid')
     print('form data:', form.data)
     print('form errors:', form.errors)
-    print('session:', session)
-    print('csrf token:', form.csrf_token)
+    print('form csrf:', form.data.csrf_token)
+    print('session csrf:', session['csrf_token'])
     return render_template('login.html', form=form)
 
 
