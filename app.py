@@ -8,9 +8,14 @@ from models import db, connect_db, User, Project
 from forms import UserAddForm, LoginForm, NewProjectForm
 from secret import secret
 
+from flask_wtf.csrf import CSRFProtect
+
+
+
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
+csrf = CSRFProtect(app)
 print('server start')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
