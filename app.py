@@ -16,6 +16,7 @@ CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
+
 print('server start')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = (
@@ -26,6 +27,7 @@ app.app_context().push()
 app.config["SECRET_KEY"] = "abc123"
 app.config["SESSION_COOKIE_SECURE"] = False
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
+app.config["WTF_CSRF_CHECK_DEFAULT"] = False
 
 
 toolbar = DebugToolbarExtension(app)
