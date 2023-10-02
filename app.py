@@ -119,7 +119,7 @@ def login():
             user = User.authenticate(form.username.data, form.password.data)
             print('form valid')
             if 'csrf_token' in session:
-                print('form csrf:', form.data.csrf_token)
+                print('form csrf:', form.data['csrf_token'])
                 print('session csrf:', session['csrf_token'])
             if user:
                 do_login(user)
