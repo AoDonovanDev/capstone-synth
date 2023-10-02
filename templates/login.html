@@ -21,7 +21,7 @@
               {% endwith %}
             <form action="/login" method="POST" id="user_form">
                 {{ form.hidden_tag() }}
-                {% for field in form if field.widget.input_type != 'hidden' %}
+                {% for field in form %}
               <div class="form-control">
                 <label>
                   <span class="label-text">{{field.name}}</span>
