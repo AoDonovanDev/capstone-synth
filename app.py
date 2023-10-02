@@ -28,7 +28,7 @@ app.app_context().push()
 app.config["SECRET_KEY"] = "abc123"
 app.config["SESSION_COOKIE_SECURE"] = False
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-
+app.config["WTF_CSRF_ENABLED"] = False
 
 
 toolbar = DebugToolbarExtension(app)
