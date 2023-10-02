@@ -91,6 +91,7 @@ def signup():
     and re-present form.
     """
     print('signup')
+    print('csrf wtf header', app.config["WTF_CSRF_HEADERS"])
     form = UserAddForm()
 
     if form.validate_on_submit():
