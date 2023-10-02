@@ -16,6 +16,7 @@ CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
 csrf = CSRFProtect(app)
+csrf.init_app(app)
 
 print('server start')
 
