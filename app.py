@@ -117,7 +117,6 @@ def signup():
 @app.route('/login', methods=["GET", "POST"])
 def login():
     """Handle user login."""
-    print('login')
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -129,7 +128,7 @@ def login():
                 return redirect("/")
         except Exception as e:
             print(e, 'User model could not authenticate')
-    flash("Invalid credentials.", 'danger')
+            flash("Invalid credentials.", 'danger')
     return render_template('login.html', form=form)
 
 
