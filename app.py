@@ -128,7 +128,7 @@ def login():
     print('form not valid')
     print('form data:', form.data)
     print('form errors:', form.errors)
-    print('form meta', form.meta)
+    print('session:', session)
     print('csrf token:', form.csrf_token)
     return render_template('login.html', form=form)
 
