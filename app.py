@@ -131,7 +131,8 @@ def login():
     print('form data:', form.data)
     print('form errors:', form.errors)
     print('form csrf:', form.data.csrf_token)
-    print('session csrf:', session['csrf_token'])
+    if 'csrf_token' in session:
+        print('session csrf:', session['csrf_token'])
     return render_template('login.html', form=form)
 
 
