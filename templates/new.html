@@ -15,7 +15,7 @@
                         {{ form.hidden_tag() }}
                         {% for field in form if field.widget.input_type != 'hidden' %}
                         <label for="{{field.name}}">{{field.name}}</label>
-                        {{ field(placeholder=field.label.text, class="form-control flexxy") }}
+                        {{ field(placeholder=field.label.text, class="form-control flexxy authForm") }}
                         {% endfor %}
                     </div>
                     <div class="card-actions flex-end">
